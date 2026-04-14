@@ -27,6 +27,10 @@ uploaded_file = st.file_uploader(
 
 num_questions = st.slider("Number of questions", 1, 10, 5)
 num_options = st.slider("Options per question", 2, 4, 4)
+difficulty = st.selectbox(
+    "Difficulty",
+    ["Easy", "Medium", "Hard"]
+)
 
 text = ""
 if uploaded_file:
@@ -45,7 +49,7 @@ if uploaded_file:
 
     if st.button("Generate Quiz"):
         with st.spinner("Generating quiz..."):
-            quiz = generate_quiz(text, num_questions, num_options)
+            quiz = generate_quiz(text, num_questions, num_options, difficulty)
 
             if quiz:
                 st.session_state.quiz = quiz

@@ -5,30 +5,51 @@ from openai import OpenAI
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-def generate_quiz(text, num_questions, num_options):
-    prompt = f"""
-You are a teacher.
+def generate_quiz(text, num_questions, num_options, difficulty):
+ difficulty_rules = {
+    "Easy": """
+- Questions should be simple and direct
+- Focus on basic facts and definitions
+- Answers should be obvious from the text
+""",
+    "Medium": """
+- Questions should require understanding
+- Include explanations or relationships
+- Avoid trivial questions
+""",
+    "Hard": """
+- Questions should require reasoning or inference
+- May combine multiple ideas from the text
+- Include tricky or similar answer choices
+"""
+}
+
+prompt = f"""
+You are a teacher creating a quiz.
+
 Create {num_questions} multiple-choice questions.
 
 Each question must have EXACTLY {num_options} options.
 
-Return ONLY JSON array:
+Difficulty level: {difficulty}
+
+Rules:
+{difficulty_rules[difficulty]}
+
+IMPORTANT:
+- Each question must be UNIQUE
+- Do NOT repeat ideas
+- Cover different parts of the text
+- The number of options MUST be exactly {num_options}
+
+Return ONLY valid JSON:
 [
   {{
     "question": "...",
-    "options": ["A) ...", "B) ...", "C) ..."],
+    "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
     "answer": "..."
   }}
 ]
-
-IMPORTANT:
-- The number of options MUST be exactly {num_options}
-- Do NOT add extra options
-- Each question must be UNIQUE
-- Do NOT repeat questions
-- Cover different parts of the text
-- Avoid repeating ideas or wording between questions.
-If you do not follow the exact number of options, the answer is invalid.
 
 Text:
 {text[:3000]}

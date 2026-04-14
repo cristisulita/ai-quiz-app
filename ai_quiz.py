@@ -55,25 +55,25 @@ Text:
 {text[:3000]}
 """
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7
-        )
+try:
+     response = client.chat.completions.create(
+         model="gpt-4o-mini",
+         messages=[{"role": "user", "content": prompt}],
+         temperature=0.7
+     )
 
-        output = response.choices[0].message.content
+     output = response.choices[0].message.content
 
-        # DEBUG
-        st.text_area("DEBUG AI OUTPUT", output, height=300) 
+     # DEBUG
+     st.text_area("DEBUG AI OUTPUT", output, height=300) 
 
-        # Clean markdown
-        clean_output = re.sub(r"```json|```", "", output).strip()
+     # Clean markdown
+     clean_output = re.sub(r"```json|```", "", output).strip()
 
-        quiz = json.loads(clean_output)
-        return quiz
+     quiz = json.loads(clean_output)
+     return quiz
 
-    except Exception as e:
+except Exception as e:
         import traceback
         traceback.print_exc()
         st.error(f"Error: {e}")

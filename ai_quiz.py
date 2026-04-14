@@ -1,4 +1,5 @@
 import json
+import re
 import streamlit as st
 from openai import OpenAI
 
@@ -6,15 +7,13 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def generate_quiz(text, num_questions, num_options):
     prompt = f"""
-Create {num_questions} multiple-choice questions from the text below.
+Create {num_questions} multiple-choice questions.
 
-Each question must have exactly {num_options} options.
-
-Return ONLY valid JSON:
+Return ONLY JSON array:
 [
   {{
     "question": "...",
-    "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
+    "options": ["A) ...", "B) ...", "C) ..."],
     "answer": "..."
   }}
 ]
@@ -31,8 +30,18 @@ Text:
         )
 
         output = response.choices[0].message.content
-        return json.loads(output)
+
+        # DEBUG
+        st.text_area("DEBUG AI OUTPUT", output, height=300)
+
+        # Clean markdown
+        clean_output = re.sub(r"```json|```", "", output).strip()
+
+        quiz = json.loads(clean_output)
+        return quiz
 
     except Exception as e:
-        print("Error:", e)
+        import traceback
+        traceback.print_exc()
+        st.error(f"Error: {e}")
         return []

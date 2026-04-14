@@ -55,7 +55,7 @@ Text:
 {text[:3000]}
 """
 
-try:
+    try:
      response = client.chat.completions.create(
          model="gpt-4o-mini",
          messages=[{"role": "user", "content": prompt}],
@@ -73,7 +73,7 @@ try:
      quiz = json.loads(clean_output)
      return quiz
 
-except Exception as e:
+    except Exception as e:
         import traceback
         traceback.print_exc()
         st.error(f"Error: {e}")

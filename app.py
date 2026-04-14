@@ -64,31 +64,44 @@ if st.session_state.raw_json:
 
 # --- Interactive quiz ---
 if st.session_state.quiz:
-    q = st.session_state.quiz[st.session_state.current_q]
+    q_index = st.session_state.current_q
+    q = st.session_state.quiz[q_index]
 
-    st.subheader(f"Question {st.session_state.current_q + 1}/{len(st.session_state.quiz)}")
+    st.subheader(f"Question {q_index + 1}/{len(st.session_state.quiz)}")
     st.write(q["question"])
 
-    st.session_state.user_answer = st.radio(
+    # Unique key per question
+    selected = st.radio(
         "Choose an answer",
         q["options"],
-        key=st.session_state.current_q
+        key=f"q_{q_index}"
     )
 
-    if st.button("Check Answer"):
-        st.session_state.show_answer = True
-        if st.session_state.user_answer == q["answer"]:
-            st.session_state.score += 1
+    # CHECK ANSWER
+    if not st.session_state.show_answer:
+        if st.button("Check Answer"):
+            st.session_state.show_answer = True
+            st.session_state.user_answer = selected
 
+            if selected == q["answer"]:
+                st.session_state.score += 1
+
+            st.rerun()  # force clean update
+
+    # SHOW RESULT
     if st.session_state.show_answer:
         if st.session_state.user_answer == q["answer"]:
             st.success("Correct ✅")
         else:
             st.error(f"Wrong ❌. Correct answer: {q['answer']}")
 
-    if st.session_state.current_q < len(st.session_state.quiz) - 1:
+        # NEXT QUESTION
         if st.button("Next Question"):
             st.session_state.current_q += 1
             st.session_state.show_answer = False
-    else:
-        st.info(f"Final score: {st.session_state.score}/{len(st.session_state.quiz)}")
+            st.session_state.user_answer = None
+            st.rerun()  # force clean transition
+
+    # FINAL SCORE
+    if st.session_state.current_q >= len(st.session_state.quiz):
+        st.success(f"Final score: {st.session_state.score}/{len(st.session_state.quiz)}")

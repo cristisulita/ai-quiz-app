@@ -65,7 +65,7 @@ def generate_quiz(text, num_questions, num_options, difficulty):
     output = response.choices[0].message.content
 
     # DEBUG
-    st.text_area("DEBUG AI OUTPUT", output, height=300) 
+    #st.text_area("DEBUG AI OUTPUT", output, height=300) 
 
     # Clean markdown
     clean_output = re.sub(r"```json|```", "", output).strip()

@@ -62,9 +62,9 @@ if uploaded_file:
                 st.error("Failed to generate quiz.")
 
 # --- Show JSON ---
-if st.session_state.raw_json:
-    st.subheader("AI JSON Output")
-    st.text_area("Raw JSON", st.session_state.raw_json, height=300)
+#if st.session_state.raw_json:
+#    st.subheader("AI JSON Output")
+#    st.text_area("Raw JSON", st.session_state.raw_json, height=300)
 
 # --- Interactive quiz ---
 if st.session_state.quiz:

@@ -95,13 +95,13 @@ if st.session_state.quiz:
         else:
             st.error(f"Wrong ❌. Correct answer: {q['answer']}")
 
-        # NEXT QUESTION
-        if st.button("Next Question"):
-            st.session_state.current_q += 1
-            st.session_state.show_answer = False
-            st.session_state.user_answer = None
-            st.rerun()  # force clean transition
-
-    # FINAL SCORE
-    if st.session_state.current_q >= len(st.session_state.quiz):
-        st.success(f"Final score: {st.session_state.score}/{len(st.session_state.quiz)}")
+        # CHECK IF LAST QUESTION
+        if st.session_state.current_q < len(st.session_state.quiz) - 1:
+            # NEXT QUESTION
+            if st.button("Next Question"):
+                st.session_state.current_q += 1
+                st.session_state.show_answer = False
+                st.session_state.user_answer = None
+                st.rerun()  # force clean transition
+        else:
+            st.success(f"Final score: {st.session_state.score}/{len(st.session_state.quiz)}")
